@@ -4,7 +4,7 @@ Created on Fri Mar 13 13:10:19 2026
 
 @author: zacjl
 
-Monte Carlo (Hit & Miss Rectangle Method)
+Monte Carlo (Hit & Miss Rectangle Method) V2
 """
 
 import sympy as sp
@@ -29,8 +29,10 @@ width = b - a
 height = sp.maximum(function, x, sp.Interval(a,b))
 
 rectangleArea = sp.sympify(width * height)
-xValues = []
-yValues = []
+xValuesOver = []
+yValuesOver = []
+xValuesUnder = []
+yValuesUnder =[]
 tallyUnder = 0
 
 #DEBUG
@@ -47,11 +49,14 @@ sum = sp.sympify(0)
 for i in range(n):
     x_rand = random.uniform(a,b)
     y_rand = random.uniform(0,height)
-    xValues.append(x_rand)
-    yValues.append(y_rand)
     # Keep tally of points that are under vs over the curve 
     if f(x_rand) > y_rand:
         tallyUnder += 1 
+        xValuesUnder.append(x_rand)
+        yValuesUnder.append(y_rand)
+    else:
+        xValuesOver.append(x_rand)
+        yValuesOver.append(y_rand)
   
 # Prepare function to be plotted
 x_axis = np.linspace(a,b,2*width)
@@ -60,8 +65,9 @@ for i in range(2*width):
     y_axis.append(f(x_axis[i]))
 
 # Plot function and random points
-plt.scatter(xValues,yValues,alpha=0.5,s=20)
-plt.plot(x_axis,y_axis,linewidth='4')
+plt.scatter(xValuesUnder,yValuesUnder,alpha=0.6,s=20,color='orange')
+plt.scatter(xValuesOver,yValuesOver,alpha=0.5,s=20)
+plt.plot(x_axis,y_axis,linewidth='4',color='orange')
 plt.show()
 
 # Calculate area via ratio
